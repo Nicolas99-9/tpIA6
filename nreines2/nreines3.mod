@@ -9,14 +9,43 @@ int taille = ...;
 range n = 1..taille;
 dvar int plateau[n] in n;
 
-// plateau[5] correspond à la colonne de la 5 eme ligne du plateau de jeu
+int indices[i in n] = i;
 
+execute{
+    var tmp = taille/2;
+    if(taille%2==1){
+       tmp = tmp - 0.5 ;
+    }
+     
+  var decrease = true;
+  for(var i in n){
+    if(decrease==true){
+       indices[i] = tmp;
+       tmp--;
+       if(tmp==0){
+         decrease = false;
+         if(taille%2==0){
+               tmp ++;
+         }
+       }
+    }
+    else{
+       indices[i] = tmp;
+       tmp++;
+
+    }
+
+  } 
+    write(indices);
+
+
+}
 
 execute{
       cp.param.searchType = "DepthFirst";
       cp.param.workers = 1;
       var f = cp.factory;
-      cp.setSearchPhases(f.searchPhase(plateau,f.selectSmallest(f.varIndex(plateau)),f.selectSmallest(f.value()))
+      cp.setSearchPhases(f.searchPhase(plateau,f.selectSmallest(f.explicitVarEval(plateau,indices)),f.selectSmallest(f.value()))
      );
 }
 // TODO
@@ -25,6 +54,7 @@ constraints{
 		   plateau[i] != plateau[j];
                    abs(plateau[i]-plateau[j]) != abs(i-j);
 	} 
+
 }
 
 execute{
@@ -42,5 +72,5 @@ execute{
    }
 
 }
-
+//main.mod
 include "main.mod";
